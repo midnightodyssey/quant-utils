@@ -54,4 +54,24 @@ env/
 .DS_Store
 
 # Jupyter
-.ipynb_checkpoints
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
+
+# Secrets / credentials (never commit)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+secrets/
+credentials/
+**/secrets.yaml
+**/secrets.yml
+**/credentials.json
+*_secret*
+*_credentials*
+.aws/
+.ibkr/
+*.token
