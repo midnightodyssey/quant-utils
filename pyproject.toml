@@ -1,0 +1,42 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "quant-lab"
+version = "0.1.0"
+description = "Educational quant toolkit: backtesting, risk, options, pairs cointegration, and market-making simulation."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [
+    { name = "midnightodyssey" },
+]
+dependencies = [
+    "numpy",
+    "pandas",
+    "scipy",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/quant_lab"]
+
+[tool.hatch.build.targets.wheel.sources]
+"src/quant_lab" = "quant_lab"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/src",
+    "/tests",
+    "/LICENSE",
+    "/README.md",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
