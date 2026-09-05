@@ -1,6 +1,6 @@
 """Vectorised backtesting engine."""
 
-from quant_lab.backtest.engine import (
+from quant_utils.backtest.engine import (
     BacktestResult,
     WalkForwardResult,
     WalkForwardWindow,

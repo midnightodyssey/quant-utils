@@ -6,14 +6,14 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from quant_lab.data.sample import make_cointegrated_pair
-from quant_lab.pairs.cointegration import (
+from quant_utils.data.sample import make_cointegrated_pair
+from quant_utils.pairs.cointegration import (
     engle_granger,
     ols_hedge_ratio,
     residual_half_life,
 )
-from quant_lab.pairs.spread import build_spread, rolling_zscore
-from quant_lab.pairs.strategy import (
+from quant_utils.pairs.spread import build_spread, rolling_zscore
+from quant_utils.pairs.strategy import (
     PairsSignalConfig,
     PairsStrategy,
     generate_signals,

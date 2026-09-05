@@ -1,6 +1,6 @@
 """Risk metrics and position sizing."""
 
-from quant_lab.risk.metrics import (
+from quant_utils.risk.metrics import (
     TRADING_DAYS,
     calmar,
     cvar,
@@ -10,7 +10,7 @@ from quant_lab.risk.metrics import (
     sortino,
     var_parametric,
 )
-from quant_lab.risk.sizing import fixed_fraction, kelly, vol_target
+from quant_utils.risk.sizing import fixed_fraction, kelly, vol_target
 
 __all__ = [
     "TRADING_DAYS",

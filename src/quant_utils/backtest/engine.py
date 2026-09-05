@@ -1,5 +1,5 @@
 """
-quant_lab.backtest.engine
+quant_utils.backtest.engine
 ─────────────────────────────────────────────────────────────────────────────
 Vectorised backtesting engine.
 
@@ -20,7 +20,7 @@ from typing import Any, Callable, Mapping, Sequence
 import numpy as np
 import pandas as pd
 
-from quant_lab.risk.metrics import risk_summary, sharpe
+from quant_utils.risk.metrics import risk_summary, sharpe
 
 
 TRADING_DAYS = 252

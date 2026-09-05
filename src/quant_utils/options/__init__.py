@@ -1,6 +1,6 @@
 """Black-Scholes option pricing and Greeks."""
 
-from quant_lab.options.black_scholes import (
+from quant_utils.options.black_scholes import (
     Greeks,
     OptionContract,
     black_scholes_greeks,

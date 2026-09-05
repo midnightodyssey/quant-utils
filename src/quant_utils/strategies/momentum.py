@@ -1,5 +1,5 @@
 """
-quant_lab.strategies.momentum
+quant_utils.strategies.momentum
 ─────────────────────────────────────────────────────────────────────────────
 Momentum / breakout strategies — buy strength, sell weakness.
 
@@ -14,8 +14,8 @@ from __future__ import annotations
 
 import pandas as pd
 
-from quant_lab.indicators import atr
-from quant_lab.strategies.base import Strategy
+from quant_utils.indicators import atr
+from quant_utils.strategies.base import Strategy
 
 
 class PriceBreakout(Strategy):

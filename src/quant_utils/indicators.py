@@ -1,5 +1,5 @@
 """
-quant_lab.indicators
+quant_utils.indicators
 ─────────────────────────────────────────────────────────────────────────────
 All indicator functions follow the same contract:
   - Input:  pandas Series (or multiple Series for OHLC indicators)

@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from quant_lab.risk import (
+from quant_utils.risk import (
     calmar,
     cvar,
     max_drawdown,

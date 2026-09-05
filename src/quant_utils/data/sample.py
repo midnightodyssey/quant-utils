@@ -1,5 +1,5 @@
 """
-quant_lab.data.sample
+quant_utils.data.sample
 
 Generate synthetic series for demos and tests — no network required at import.
 
@@ -143,7 +143,7 @@ def make_gbm_mid(
     seed: int | None = 42,
 ) -> pd.Series:
     """GBM mid-price path (wrapper around the microstructure helper)."""
-    from quant_lab.microstructure.market_maker import simulate_mid_path
+    from quant_utils.microstructure.market_maker import simulate_mid_path
 
     return simulate_mid_path(
         n_steps, x0=x0, mu=mu, sigma=sigma, dt=dt, process="gbm", seed=seed
@@ -161,7 +161,7 @@ def make_mean_reverting_mid(
     seed: int | None = 42,
 ) -> pd.Series:
     """Mean-reverting mid-price path for inventory-risk demos."""
-    from quant_lab.microstructure.market_maker import simulate_mid_path
+    from quant_utils.microstructure.market_maker import simulate_mid_path
 
     return simulate_mid_path(
         n_steps,

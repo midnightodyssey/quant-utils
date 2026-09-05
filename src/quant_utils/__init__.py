@@ -1,26 +1,26 @@
 """
-quant-lab — educational quantitative trading toolkit.
+quant-utils — educational quantitative trading toolkit.
 
 Public API re-exports the most commonly used entry points.
 """
 
-from quant_lab.backtest import BacktestResult, run_backtest, summary_table, walk_forward
-from quant_lab.data import make_ohlcv
-from quant_lab.indicators import atr, bollinger_bands, ema, macd, rsi, sma
-from quant_lab.microstructure import (
+from quant_utils.backtest import BacktestResult, run_backtest, summary_table, walk_forward
+from quant_utils.data import make_ohlcv
+from quant_utils.indicators import atr, bollinger_bands, ema, macd, rsi, sma
+from quant_utils.microstructure import (
     MarketMakerConfig,
     MarketMakerResult,
     MarketMakerSimulator,
     simulate_mid_path,
 )
-from quant_lab.options import (
+from quant_utils.options import (
     Greeks,
     OptionContract,
     black_scholes_greeks,
     black_scholes_price,
     implied_volatility,
 )
-from quant_lab.pairs import (
+from quant_utils.pairs import (
     CointegrationResult,
     PairsSignalConfig,
     PairsStrategy,
@@ -28,7 +28,7 @@ from quant_lab.pairs import (
     generate_signals,
     rolling_zscore,
 )
-from quant_lab.risk import (
+from quant_utils.risk import (
     calmar,
     fixed_fraction,
     kelly,
@@ -38,7 +38,7 @@ from quant_lab.risk import (
     sortino,
     vol_target,
 )
-from quant_lab.strategies import ATRBreakout, PriceBreakout, Strategy
+from quant_utils.strategies import ATRBreakout, PriceBreakout, Strategy
 
 __all__ = [
     "ATRBreakout",

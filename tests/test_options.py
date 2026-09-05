@@ -4,7 +4,7 @@ from datetime import date
 
 import pytest
 
-from quant_lab.options import (
+from quant_utils.options import (
     OptionContract,
     black_scholes_greeks,
     black_scholes_price,

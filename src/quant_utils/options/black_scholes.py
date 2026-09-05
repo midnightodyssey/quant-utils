@@ -1,5 +1,5 @@
 """
-quant_lab.options.black_scholes
+quant_utils.options.black_scholes
 
 Core derivatives analytics for European option pricing and risk.
 

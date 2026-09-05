@@ -1,6 +1,6 @@
 """Sample / synthetic market data helpers."""
 
-from quant_lab.data.sample import (
+from quant_utils.data.sample import (
     make_cointegrated_pair,
     make_gbm_mid,
     make_mean_reverting_mid,

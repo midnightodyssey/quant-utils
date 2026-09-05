@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from quant_lab.backtest import (
+from quant_utils.backtest import (
     BacktestResult,
     WalkForwardResult,
     expand_grid,
@@ -14,7 +14,7 @@ from quant_lab.backtest import (
     walk_forward,
     window_edges,
 )
-from quant_lab.strategies import PriceBreakout
+from quant_utils.strategies import PriceBreakout
 
 
 @pytest.fixture

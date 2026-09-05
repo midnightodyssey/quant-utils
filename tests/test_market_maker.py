@@ -5,8 +5,8 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-from quant_lab.data.sample import make_gbm_mid, make_mean_reverting_mid
-from quant_lab.microstructure.market_maker import (
+from quant_utils.data.sample import make_gbm_mid, make_mean_reverting_mid
+from quant_utils.microstructure.market_maker import (
     MarketMakerConfig,
     MarketMakerSimulator,
     simulate_mid_path,

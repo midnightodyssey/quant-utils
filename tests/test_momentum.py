@@ -4,8 +4,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from quant_lab.backtest import BacktestResult
-from quant_lab.strategies import ATRBreakout, PriceBreakout, Strategy
+from quant_utils.backtest import BacktestResult
+from quant_utils.strategies import ATRBreakout, PriceBreakout, Strategy
 
 
 def make_df(close: pd.Series) -> pd.DataFrame:

@@ -1,6 +1,6 @@
-# Quant Lab
+# Quant Utils
 
-**Quant Lab** is a public research portfolio: small, testable Python modules for
+**Quant Utils** is a public research portfolio: small, testable Python modules for
 systematic trading *ideas* — backtests, risk, options, pairs, and market-making —
 shipped with offline notebooks. It is extracted from a private research monorepo
 and deliberately stripped of live brokers, runners, and ops.
@@ -16,13 +16,13 @@ and deliberately stripped of live brokers, runners, and ops.
 
 | # | Project | Core modules | Notebook |
 |---|---------|--------------|----------|
-| 1 | **Momentum breakout backtest** | [`strategies/momentum.py`](src/quant_lab/strategies/momentum.py), [`backtest/engine.py`](src/quant_lab/backtest/engine.py) | [`notebooks/01_momentum_backtest.ipynb`](notebooks/01_momentum_backtest.ipynb) |
-| 2 | **Options pricing (Black–Scholes)** | [`options/black_scholes.py`](src/quant_lab/options/black_scholes.py) | [`notebooks/02_options_pricing.ipynb`](notebooks/02_options_pricing.ipynb) |
-| 3 | **Volatility targeting / sizing** | [`risk/sizing.py`](src/quant_lab/risk/sizing.py), [`risk/metrics.py`](src/quant_lab/risk/metrics.py) | [`notebooks/03_volatility_targeting.ipynb`](notebooks/03_volatility_targeting.ipynb) |
-| 4 | **Pairs trading** | [`pairs/`](src/quant_lab/pairs/) (cointegration, spread, signals) | [`notebooks/04_pairs_trading.ipynb`](notebooks/04_pairs_trading.ipynb) |
-| 5 | **Market making** | [`microstructure/market_maker.py`](src/quant_lab/microstructure/market_maker.py) | [`notebooks/05_market_making.ipynb`](notebooks/05_market_making.ipynb) |
+| 1 | **Momentum breakout backtest** | [`strategies/momentum.py`](src/quant_utils/strategies/momentum.py), [`backtest/engine.py`](src/quant_utils/backtest/engine.py) | [`notebooks/01_momentum_backtest.ipynb`](notebooks/01_momentum_backtest.ipynb) |
+| 2 | **Options pricing (Black–Scholes)** | [`options/black_scholes.py`](src/quant_utils/options/black_scholes.py) | [`notebooks/02_options_pricing.ipynb`](notebooks/02_options_pricing.ipynb) |
+| 3 | **Volatility targeting / sizing** | [`risk/sizing.py`](src/quant_utils/risk/sizing.py), [`risk/metrics.py`](src/quant_utils/risk/metrics.py) | [`notebooks/03_volatility_targeting.ipynb`](notebooks/03_volatility_targeting.ipynb) |
+| 4 | **Pairs trading** | [`pairs/`](src/quant_utils/pairs/) (cointegration, spread, signals) | [`notebooks/04_pairs_trading.ipynb`](notebooks/04_pairs_trading.ipynb) |
+| 5 | **Market making** | [`microstructure/market_maker.py`](src/quant_utils/microstructure/market_maker.py) | [`notebooks/05_market_making.ipynb`](notebooks/05_market_making.ipynb) |
 
-Synthetic sample paths live in [`quant_lab.data`](src/quant_lab/data/sample.py) — no network required.
+Synthetic sample paths live in [`quant_utils.data`](src/quant_utils/data/sample.py) — no network required.
 
 ---
 
@@ -56,7 +56,7 @@ CI runs the same suite on push and pull requests
 ## Package layout
 
 ```
-src/quant_lab/
+src/quant_utils/
   backtest/          # vectorised engine + walk-forward helpers
   data/              # synthetic OHLCV, pairs, mid paths
   strategies/        # momentum / breakout signals

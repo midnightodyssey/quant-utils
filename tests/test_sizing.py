@@ -1,6 +1,6 @@
 """Tests for position sizing helpers."""
 
-from quant_lab.risk.sizing import fixed_fraction, kelly, vol_target
+from quant_utils.risk.sizing import fixed_fraction, kelly, vol_target
 
 
 def test_fixed_fraction_known_value():

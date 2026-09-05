@@ -1,6 +1,6 @@
 # Sanitization notes
 
-`quant-lab` is a **public, educational** extract from a private research monorepo
+`quant-utils` is a **public, educational** extract from a private research monorepo
 (`trading-strategies`). The goal is to ship readable research modules and demos
 without exposing production wiring, credentials, or proprietary ops.
 

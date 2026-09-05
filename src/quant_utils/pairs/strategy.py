@@ -8,8 +8,8 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from quant_lab.pairs.cointegration import engle_granger
-from quant_lab.pairs.spread import build_spread, rolling_zscore
+from quant_utils.pairs.cointegration import engle_granger
+from quant_utils.pairs.spread import build_spread, rolling_zscore
 
 
 @dataclass(frozen=True)
@@ -80,7 +80,7 @@ def spread_pnl(
 class PairsStrategy:
     """Fit cointegration on a train window, trade z-score on a test window.
 
-    Compatible with a simple backtest loop if ``quant_lab.backtest`` exists:
+    Compatible with a simple backtest loop if ``quant_utils.backtest`` exists:
     expose ``fit`` / ``generate`` / ``positions``. Otherwise use
     :meth:`run` for self-contained residual PnL.
     """

@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "quant-lab"
+name = "quant-utils"
 version = "0.1.0"
 description = "Educational quant toolkit: backtesting, risk, options, pairs cointegration, and market-making simulation."
 readme = "README.md"
@@ -29,10 +29,10 @@ notebooks = [
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/quant_lab"]
+packages = ["src/quant_utils"]
 
 [tool.hatch.build.targets.wheel.sources]
-"src/quant_lab" = "quant_lab"
+"src/quant_utils" = "quant_utils"
 
 [tool.hatch.build.targets.sdist]
 include = [

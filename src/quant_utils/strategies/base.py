@@ -1,5 +1,5 @@
 """
-quant_lab.strategies.base
+quant_utils.strategies.base
 ─────────────────────────────────────────────────────────────────────────────
 Abstract base class that every strategy must inherit from.
 
@@ -16,7 +16,7 @@ from abc import ABC, abstractmethod
 
 import pandas as pd
 
-from quant_lab.backtest.engine import BacktestResult, run_backtest
+from quant_utils.backtest.engine import BacktestResult, run_backtest
 
 
 class Strategy(ABC):

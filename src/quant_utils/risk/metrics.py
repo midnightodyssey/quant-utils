@@ -1,5 +1,5 @@
 """
-quant_lab.risk.metrics
+quant_utils.risk.metrics
 ─────────────────────────────────────────────────────────────────────────────
 Risk metrics for evaluating strategy performance.
 

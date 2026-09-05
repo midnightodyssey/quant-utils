@@ -1,5 +1,5 @@
 """
-quant_lab.risk.sizing
+quant_utils.risk.sizing
 ─────────────────────────────────────────────────────────────────────────────
 Position sizing utilities.
 

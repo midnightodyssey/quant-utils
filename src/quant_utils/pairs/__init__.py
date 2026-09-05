@@ -1,12 +1,12 @@
 """Pairs trading via Engle–Granger cointegration and z-score signals."""
 
-from quant_lab.pairs.cointegration import (
+from quant_utils.pairs.cointegration import (
     CointegrationResult,
     engle_granger,
     ols_hedge_ratio,
 )
-from quant_lab.pairs.spread import build_spread, rolling_zscore
-from quant_lab.pairs.strategy import PairsSignalConfig, PairsStrategy, generate_signals
+from quant_utils.pairs.spread import build_spread, rolling_zscore
+from quant_utils.pairs.strategy import PairsSignalConfig, PairsStrategy, generate_signals
 
 __all__ = [
     "CointegrationResult",
