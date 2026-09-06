@@ -1,0 +1,25 @@
+---
+description: Standing agent ops — fan-out three, delegate substantive work, follow house style
+alwaysApply: true
+---
+
+# Standing agent ops
+
+This is an explicit standing user request. Treat it as already requested every session.
+
+## Delegation
+
+- The query model plans and synthesises. Hands-on exploration, coding, review, and debugging go to subagents (`Task` in Cursor; `Agent` in Claude Code).
+- **Default fan-out is three.** Launch three independent subagents in one turn. After they return, launch the next three. Use fewer only when fewer independent strands remain or a later step depends on an earlier result.
+- Prefer the `specialist-routing` skill when choosing which Cursor Task type or community skill to use.
+- Do not silently skip delegation because a specialist is missing — use the best available built-in and say so once if a preferred specialist is absent.
+
+## Python
+
+- For any Python change, follow the `python-house-style` skill (and repo `STYLE.md` / sibling `dev-standards/STYLE.md` when present).
+- Non-negotiables: `Decimal` for money/rates (never `float`), engine never imports UI, `%`-style logging args, no bare `except`, refuse to guess.
+
+## Git
+
+- Never commit directly to `main`. Branch first.
+- Do not bypass protected-branch hooks unless the user explicitly asks.
