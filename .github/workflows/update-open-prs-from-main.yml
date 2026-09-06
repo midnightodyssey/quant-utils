@@ -1,0 +1,57 @@
+name: Update open PRs from main
+
+# After main moves, refresh every open PR branch so sibling PRs do not rot
+# into conflicts. Uses `gh pr update-branch` (merge main into the PR head).
+# Conflicts are left alone; the PR stays marked dirty until a human/agent
+# resolves them.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: update-open-prs-from-main
+  cancel-in-progress: true
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Update each open PR from main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          mapfile -t NUMS < <(gh pr list --state open --limit 100 --json number,isDraft -q '.[].number')
+          if [[ ${#NUMS[@]} -eq 0 ]]; then
+            echo "no open PRs"
+            exit 0
+          fi
+          ok=0
+          skipped=0
+          failed=0
+          for n in "${NUMS[@]}"; do
+            echo "::group::PR #$n"
+            if out=$(gh pr update-branch "$n" 2>&1); then
+              echo "$out"
+              ok=$((ok + 1))
+            else
+              echo "$out"
+              # Already up-to-date or conflict — both are non-fatal here.
+              if echo "$out" | grep -qiE 'already up.to.date|cannot update|merge conflict|not mergeable'; then
+                skipped=$((skipped + 1))
+              else
+                failed=$((failed + 1))
+              fi
+            fi
+            echo "::endgroup::"
+          done
+          echo "updated=$ok skipped=$skipped failed=$failed"
+          # Do not fail the workflow on conflicts — the signal is the PR's
+          # mergeable state, not this job.
+          exit 0
