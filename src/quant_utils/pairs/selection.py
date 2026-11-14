@@ -98,7 +98,12 @@ def select_pairs(
         if a not in prices.columns or b not in prices.columns:
             logger.warning("pair (%s, %s) not testable: missing price column", a, b)
             continue
-        la, lb = np.log(prices[a]), np.log(prices[b])
+        with np.errstate(invalid="ignore", divide="ignore"):
+            la, lb = np.log(prices[a]), np.log(prices[b])
+        if not (np.isfinite(la).all() and np.isfinite(lb).all()):
+            # Refuse to guess: do not silently drop NaN / non-positive prices.
+            logger.warning("pair (%s, %s) not testable: non-finite log prices", a, b)
+            continue
         try:
             res = engle_granger(la, lb, use_log=False, lags=lags)
             hl = half_life(res.residuals)

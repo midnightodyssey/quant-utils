@@ -259,3 +259,10 @@ def test_select_pairs_bounds_are_required_and_enforced():
     assert slow.n_candidates == 1 and slow.selected == ()
     narrow = select_pairs(panel, [("AAA", "BBB")], **{**_SEL, "beta_max": 1.0})
     assert narrow.selected == ()
+
+
+def test_select_pairs_does_not_silently_drop_nan_prices():
+    panel = _panel()
+    panel.iloc[5, 0] = np.nan
+    sel = select_pairs(panel, [("AAA", "BBB")], **_SEL)
+    assert (sel.n_candidates, sel.n_tested, sel.selected) == (1, 0, ())
