@@ -1,9 +1,24 @@
-"""Spread construction and rolling z-scores for pairs trading."""
+"""Spread construction and trailing statistics for pairs trading.
+
+Causality
+---------
+Every rolling statistic here is *trailing* and **includes bar t**. A value at
+bar ``t`` is therefore known at the close of ``t``. Anything that acts on it can
+execute no earlier than bar ``t + 1``; the caller applies that one-bar delay
+(:func:`quant_utils.pairs.strategy.spread_pnl` does so for residual PnL).
+"""
 
 from __future__ import annotations
 
+import math
+
 import numpy as np
 import pandas as pd
+
+from quant_utils.pairs.errors import PairsError
+
+#: Fewest observations the half-life estimator will run on by default.
+MIN_OBS = 30
 
 
 def build_spread(
@@ -42,24 +57,73 @@ def build_spread(
     return spread
 
 
+def rolling_hedge_ratio(
+    y: pd.Series, x: pd.Series, window: int
+) -> tuple[pd.Series, pd.Series]:
+    """Trailing-window OLS ``y = alpha + beta * x``; returns ``(alpha, beta)``.
+
+    The window ends at (and includes) bar t, so the value at t uses no later
+    data. The first ``window - 1`` values are NaN. ``y`` and ``x`` are aligned
+    by index; pass log prices for an elasticity-style beta.
+    """
+    if window < 2:
+        raise PairsError("window must be >= 2")
+    cov = y.rolling(window).cov(x)
+    var = x.rolling(window).var()
+    beta = cov / var
+    alpha = y.rolling(window).mean() - beta * x.rolling(window).mean()
+    return alpha, beta
+
+
+def zscore(spread: pd.Series | np.ndarray, window: int, *, min_periods: int | None = None) -> pd.Series:
+    """Trailing z-score ``(e - mean) / std`` over ``window`` bars (ddof=1).
+
+    The window ends at and includes bar t (see the module docstring). A zero
+    standard deviation yields NaN rather than ``inf``.
+    """
+    if window < 2:
+        raise PairsError("window must be >= 2")
+    s = pd.Series(spread, dtype=float).rename("spread")
+    periods = window if min_periods is None else min_periods
+    roll = s.rolling(window=window, min_periods=periods)
+    z = (s - roll.mean()) / roll.std(ddof=1)
+    return z.replace([np.inf, -np.inf], np.nan).rename("zscore")
+
+
 def rolling_zscore(
     spread: pd.Series | np.ndarray,
     window: int,
     *,
     min_periods: int | None = None,
 ) -> pd.Series:
-    """Rolling z-score of the spread: ``(e - μ) / σ`` over ``window``.
+    """Alias of :func:`zscore`, kept for backward compatibility.
 
-    Uses a trailing window that includes the current observation (standard for
-    simple demos). For strict no-lookahead research, shift the result by one.
+    The window includes the current observation, so a decision made on this
+    z-score is a close-of-bar-t decision to be executed at t + 1.
     """
-    if window < 2:
-        raise ValueError("window must be >= 2")
-    s = pd.Series(spread, dtype=float).rename("spread")
-    min_periods = window if min_periods is None else min_periods
-    mu = s.rolling(window=window, min_periods=min_periods).mean()
-    sigma = s.rolling(window=window, min_periods=min_periods).std(ddof=1)
-    z = (s - mu) / sigma
-    # Avoid inf when sigma collapses
-    z = z.replace([np.inf, -np.inf], np.nan).rename("zscore")
-    return z
+    return zscore(spread, window, min_periods=min_periods)
+
+
+def half_life(spread: pd.Series | np.ndarray, *, min_obs: int = MIN_OBS) -> float:
+    """Ornstein–Uhlenbeck half-life in bars, from ``ds_t = a + b s_{t-1}``.
+
+    With ``phi = 1 + b`` the half-life is ``-ln 2 / ln phi``. Returns ``inf``
+    when ``phi >= 1`` (no mean reversion) and ``0.0`` when ``phi <= 0`` (the
+    spread reverts within a bar). This is the exact discrete form; the common
+    ``-ln 2 / b`` shortcut understates fast reversion.
+    """
+    s = np.asarray(spread, dtype=float)
+    s = s[np.isfinite(s)]
+    if len(s) < max(min_obs, 3):
+        raise PairsError(f"need at least {max(min_obs, 3)} finite observations")
+    lag, diff = s[:-1], np.diff(s)
+    var = float(((lag - lag.mean()) ** 2).sum())
+    if var == 0.0:
+        raise PairsError("spread has zero variance")
+    b = float(((lag - lag.mean()) * (diff - diff.mean())).sum() / var)
+    phi = 1.0 + b
+    if phi >= 1.0:
+        return math.inf
+    if phi <= 0.0:
+        return 0.0
+    return -math.log(2.0) / math.log(phi)
