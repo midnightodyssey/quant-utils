@@ -23,7 +23,7 @@ from quant_utils.pairs.strategy import (
 
 def test_ols_hedge_ratio_recovers_known_beta():
     pair = make_cointegrated_pair(n=800, hedge_ratio=0.75, sigma_spread=0.01, seed=1)
-    beta, intercept, resid = ols_hedge_ratio(pair["y"], pair["x"], use_log=True)
+    beta, _, resid = ols_hedge_ratio(pair["y"], pair["x"], use_log=True)
     assert beta == pytest.approx(0.75, abs=0.05)
     assert len(resid) == len(pair)
     assert np.isfinite(resid).all()
@@ -88,7 +88,7 @@ def test_pairs_strategy_run_produces_pnl():
     strat = PairsStrategy(
         PairsSignalConfig(entry_z=1.5, exit_z=0.4, z_window=40, use_log=True)
     )
-    out = strat.run(pair["y"], pair["x"])
+    out = strat.run(pair["y"], pair["x"], formation_window=200)
     assert {"spread", "zscore", "position", "pnl"} <= set(out.columns)
     assert set(out["position"].dropna().unique()).issubset({-1, 0, 1})
     # PnL should be defined and finite
@@ -103,3 +103,61 @@ def test_spread_pnl_uses_lagged_position():
     # position at t=1 is 0 (shifted), t=2 uses pos=1 → Δ=0.5, t=3 uses pos=1 → Δ=-0.5
     assert pnl.iloc[2] == pytest.approx(0.5)
     assert pnl.iloc[3] == pytest.approx(-0.5)
+
+
+# --- Regression tests for the v0.1.0 defects (each failed before the fix) ----
+
+
+def _independent_logs(n: int, seed: int) -> tuple[pd.Series, pd.Series]:
+    rng = np.random.default_rng(seed)
+    y = pd.Series(np.cumsum(rng.normal(0, 0.01, n)))
+    x = pd.Series(np.cumsum(rng.normal(0, 0.01, n)))
+    return y, x
+
+
+def test_regression_eg_uses_cointegration_critical_values():
+    """v0.1.0 used plain-ADF values (5% = -2.86); EG needs about -3.34."""
+    y, x = _independent_logs(400, 0)
+    res = engle_granger(y, x, use_log=False)
+    assert res.critical_values[0.05] < -3.30
+    assert res.critical_values[0.01] < -3.85
+    assert res.critical_values[0.10] < -3.00
+
+
+def test_regression_eg_false_positive_rate_is_nominal():
+    """v0.1.0 rejected the null on ~1 in 4 independent walks at the 5% level."""
+    n_sims, rejects = 400, 0
+    for seed in range(n_sims):
+        y, x = _independent_logs(250, seed)
+        rejects += engle_granger(y, x, use_log=False, significance=0.05).is_cointegrated
+    rate = rejects / n_sims
+    assert 0.02 <= rate <= 0.09, rate
+
+
+def test_regression_nan_zscore_goes_flat():
+    """v0.1.0 held the previous position through a NaN z-score."""
+    z = pd.Series([0.0, -2.5, np.nan, -1.0, -2.5])
+    assert list(generate_signals(z, entry_z=2.0, exit_z=0.5)) == [0, 1, 0, 0, 1]
+
+
+def test_regression_run_does_not_fit_on_the_trading_sample():
+    """v0.1.0 run() fitted the hedge on the full sample and traded that sample."""
+    pair = make_cointegrated_pair(n=500, half_life=12.0, sigma_spread=0.03, seed=5)
+    y, x = pair["y"], pair["x"]
+    cfg = PairsSignalConfig(entry_z=1.5, exit_z=0.4, z_window=40, use_log=True)
+    formation = 250
+    base = PairsStrategy(cfg)
+    out = base.run(y, x, formation_window=formation)
+    # No position inside the formation window.
+    assert (out["position"].iloc[:formation] == 0).all()
+    # Perturbing data after the cut never changes the fitted hedge ...
+    y2, x2 = y.copy(), x.copy()
+    rng = np.random.default_rng(1)
+    y2.iloc[formation + 50 :] *= np.exp(rng.normal(0, 0.2, len(y) - formation - 50))
+    pert = PairsStrategy(cfg)
+    out2 = pert.run(y2, x2, formation_window=formation)
+    assert pert.hedge_ratio_ == base.hedge_ratio_
+    # ... nor any position taken before the perturbation.
+    pd.testing.assert_series_equal(
+        out["position"].iloc[: formation + 50], out2["position"].iloc[: formation + 50]
+    )
