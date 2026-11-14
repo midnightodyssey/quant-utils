@@ -90,7 +90,7 @@ Same operating setup as the other midnightodyssey repos:
 
 - `AGENTS.md` — agent rules and dependency direction
 - `.github/pull_request_template.md` — PR checklist
-- `.github/workflows/ci.yml` — pytest on 3.10 / 3.12
+- `.github/workflows/ci.yml` — pytest on 3.10 / 3.12 / 3.14
 - `.github/workflows/update-open-prs-from-main.yml` — refresh open PR branches after `main` moves
 - `.github/dependabot.yml` — weekly Actions + pip updates
 - Merge settings: merge commit + rebase only; delete branch on merge
